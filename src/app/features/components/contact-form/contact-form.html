@@ -1,0 +1,11 @@
+<section>
+    <form [formGroup]="contactForm">
+        <label for="firstName">First name</label>
+        <input type="text" name="firstName" id="firstName" formControlName="firstName">
+    </form>
+    <footer>
+        <button (click)="submitForm()" [disabled]="submitDisabled">
+            Submit
+        </button>
+    </footer>
+</section>
