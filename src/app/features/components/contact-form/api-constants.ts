@@ -1,0 +1,1 @@
+export const CONTACT_FORM_API = "https://formsubmituiassignment.free.beeceptor.com/";
