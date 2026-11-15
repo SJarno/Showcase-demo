@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ContactFormComponent } from './features/components/contact-form/contact-form';
+import { ContactFormComponent } from './features/contact-form/components/contact-form/contact-form';
 
 @Component({
   imports: [RouterOutlet, ContactFormComponent],

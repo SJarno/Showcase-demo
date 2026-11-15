@@ -20,7 +20,19 @@ mat-form-field {
     width: 100%;
 }
 
+.progress-bar {
+    height: 4px;
+}
+
 footer {
     display: flex;
     justify-content: center;
+}
+
+/* disable defaults */
+fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
 }

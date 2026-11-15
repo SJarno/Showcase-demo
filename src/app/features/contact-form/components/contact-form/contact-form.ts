@@ -7,15 +7,18 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { ContactFormService } from '../../services/contact-form-service';
 import { form, required, FormField, disabled, submit } from '@angular/forms/signals';
+import { ErrorDialogService } from '../../../../shared/features/error-dialog/services/error-dialog-service';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
-  imports: [ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField],
+  imports: [ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule],
   selector: 'app-contact-form',
   styleUrl: './contact-form.scss',
   templateUrl: './contact-form.html',
 })
 export class ContactFormComponent {
   private readonly contactFormService = inject(ContactFormService);
+  private readonly errorDialogService = inject(ErrorDialogService);
 
   public title = signal('Please fill in the form');
   //public isLoading = signal(false);
@@ -42,13 +45,13 @@ export class ContactFormComponent {
       const response = await submit(this.contactForm, async (field) => {
         const rawData: ContactFormData = field().value();
         const apiResponse = await this.contactFormService.handlePayload(rawData);
-        console.log('API response:', apiResponse);
       });
       if (response) {
         console.log(response);
       }
     } catch (error) {
       console.error(error);
+      this.errorDialogService.handleNonHttpError(error);
     } finally {
       this.isSubmitting.set(false);
     }
