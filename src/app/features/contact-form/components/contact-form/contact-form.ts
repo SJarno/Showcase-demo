@@ -1,5 +1,4 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ContactFormData } from '../../models/contact-form';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -11,31 +10,31 @@ import { ErrorDialogService } from '../../../../shared/features/error-dialog/ser
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
-  imports: [ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule],
+  imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule],
   selector: 'app-contact-form',
   styleUrl: './contact-form.scss',
   templateUrl: './contact-form.html',
 })
 export class ContactFormComponent {
-  private readonly contactFormService = inject(ContactFormService);
-  private readonly errorDialogService = inject(ErrorDialogService);
+  private readonly _contactFormService = inject(ContactFormService);
+  private readonly _errorDialogService = inject(ErrorDialogService);
 
   public title = signal('Please fill in the form');
   //public isLoading = signal(false);
   public isSubmitting = signal(false);
 
-  private readonly contactFormModel = signal<ContactFormData>({
+  private readonly _contactFormModel = signal<ContactFormData>({
     firstName: ''
   });
 
-  public contactForm = form(this.contactFormModel, (path) => {
+  public contactForm = form(this._contactFormModel, (path) => {
     required(path.firstName, {
       message: 'First name required'
-    }),
+    });
 
-      disabled(path.firstName, {
-        when: () => this.isSubmitting()
-      })
+    disabled(path.firstName, {
+      when: () => this.isSubmitting()
+    });
   });
 
   public async submitForm(): Promise<void> {
@@ -44,14 +43,17 @@ export class ContactFormComponent {
     try {
       const response = await submit(this.contactForm, async (field) => {
         const rawData: ContactFormData = field().value();
-        const apiResponse = await this.contactFormService.handlePayload(rawData);
+        await this._contactFormService.handlePayload(rawData);
+        field().reset();
       });
+
       if (response) {
-        console.log(response);
+
       }
+
     } catch (error) {
       console.error(error);
-      this.errorDialogService.handleNonHttpError(error);
+      this._errorDialogService.handleNonHttpError(error);
     } finally {
       this.isSubmitting.set(false);
     }

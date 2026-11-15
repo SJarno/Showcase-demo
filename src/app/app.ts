@@ -9,5 +9,5 @@ import { ContactFormComponent } from './features/contact-form/components/contact
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('nordea-demo');
+  protected readonly title = signal('Nordea demo');
 }
