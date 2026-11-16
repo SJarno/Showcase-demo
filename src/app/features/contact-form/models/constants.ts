@@ -1,0 +1,1 @@
+export const SNACKBAR_SUCCESS = 'Success: Form sent';

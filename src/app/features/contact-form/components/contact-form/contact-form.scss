@@ -7,13 +7,14 @@
 .page-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1em;
     width: 100%;
 }
 
-form {
+fieldset {
     display: flex;
     flex-direction: column;
+    gap: 1em;
 }
 
 mat-form-field {
@@ -24,9 +25,10 @@ mat-form-field {
     height: 4px;
 }
 
-footer {
+.footer-actions {
     display: flex;
     justify-content: center;
+    gap: 1em;
 }
 
 /* disable defaults */

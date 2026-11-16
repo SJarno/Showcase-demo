@@ -5,13 +5,15 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { ContactFormService } from '../../services/contact-form-service';
-import { form, required, FormField, disabled, submit } from '@angular/forms/signals';
+import { form, required, FormField, disabled, submit, maxLength, email } from '@angular/forms/signals';
 import { ErrorDialogService } from '../../../../shared/features/error-dialog/services/error-dialog-service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatCardModule} from '@angular/material/card';
+import { SNACKBAR_SUCCESS } from '../../models/constants';
 
 @Component({
-  imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule],
+  imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule, MatCardModule],
   selector: 'app-contact-form',
   styleUrl: './contact-form.scss',
   templateUrl: './contact-form.html',
@@ -34,6 +36,8 @@ export class ContactFormComponent {
     textArea: ''
   });
 
+  public readonly textAreaMaxLength = signal(2000);
+
   public contactForm = form(this._contactFormModel, (path) => {
     required(path.firstName, {
       message: 'First name required'
@@ -53,6 +57,11 @@ export class ContactFormComponent {
 
     required(path.email, {
       message: 'Email is required'
+    });
+    email(path.email, { message: 'Not a valid email' });
+
+    maxLength(path.textArea, this.textAreaMaxLength(), {
+      message: 'Maximun of 2000 characters allowed'
     });
 
     disabled(path.firstName, {
@@ -93,7 +102,11 @@ export class ContactFormComponent {
         field().reset();
       });
 
-      this._snackBar.open('Success');
+      this._snackBar.open(SNACKBAR_SUCCESS, 'Close', {
+        verticalPosition: 'top',
+        duration: 5000
+      });
+
     } catch (error) {
       console.error(error);
       this._errorDialogService.handleNonHttpError(error);

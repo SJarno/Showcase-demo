@@ -3,6 +3,7 @@ import { ContactFormComponent } from './contact-form';
 import { ContactFormService } from '../../services/contact-form-service';
 import { ErrorDialogService } from '../../../../shared/features/error-dialog/services/error-dialog-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACKBAR_SUCCESS } from '../../models/constants';
 
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
@@ -216,7 +217,8 @@ describe('ContactFormComponent', () => {
 
     await component.submitForm();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Success');
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      SNACKBAR_SUCCESS, 'Close', { verticalPosition: 'top', duration: 5000 });
   });
 
   /* Test helper */
