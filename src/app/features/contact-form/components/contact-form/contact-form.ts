@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
 import { ContactFormData } from '../../models/contact-form';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -8,6 +8,7 @@ import { ContactFormService } from '../../services/contact-form-service';
 import { form, required, FormField, disabled, submit } from '@angular/forms/signals';
 import { ErrorDialogService } from '../../../../shared/features/error-dialog/services/error-dialog-service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule],
@@ -18,13 +19,19 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 export class ContactFormComponent {
   private readonly _contactFormService = inject(ContactFormService);
   private readonly _errorDialogService = inject(ErrorDialogService);
+  private _snackBar = inject(MatSnackBar);
 
   public title = signal('Please fill in the form');
   //public isLoading = signal(false);
   public isSubmitting = signal(false);
 
   private readonly _contactFormModel = signal<ContactFormData>({
-    firstName: ''
+    firstName: '',
+    lastName: '',
+    city: '',
+    postalCode: '',
+    email: '',
+    textArea: ''
   });
 
   public contactForm = form(this._contactFormModel, (path) => {
@@ -32,25 +39,61 @@ export class ContactFormComponent {
       message: 'First name required'
     });
 
+    required(path.lastName, {
+      message: 'Last name required'
+    });
+
+    required(path.city, {
+      message: 'City is required'
+    });
+
+    required(path.postalCode, {
+      message: 'Postal code is required'
+    });
+
+    required(path.email, {
+      message: 'Email is required'
+    });
+
     disabled(path.firstName, {
       when: () => this.isSubmitting()
     });
+
+    disabled(path.lastName, {
+      when: () => this.isSubmitting()
+    });
+
+    disabled(path.city, {
+      when: () => this.isSubmitting()
+    });
+
+    disabled(path.postalCode, {
+      when: () => this.isSubmitting()
+    });
+
+    disabled(path.email, {
+      when: () => this.isSubmitting()
+    });
+
+    disabled(path.textArea, {
+      when: () => this.isSubmitting()
+    });
+
   });
 
   public async submitForm(): Promise<void> {
+    if (this.contactForm().invalid()) return;
+
     this.isSubmitting.set(true);
 
     try {
-      const response = await submit(this.contactForm, async (field) => {
+      await submit(this.contactForm, async (field) => {
         const rawData: ContactFormData = field().value();
         await this._contactFormService.handlePayload(rawData);
         field().reset();
       });
 
-      if (response) {
-
-      }
-
+      this._snackBar.open('Success');
     } catch (error) {
       console.error(error);
       this._errorDialogService.handleNonHttpError(error);
@@ -65,5 +108,18 @@ export class ContactFormComponent {
 
     return invalid || submitting;
   });
+
+  public clearForm(): void {
+    this._contactFormModel.set({
+      firstName: '',
+      lastName: '',
+      city: '',
+      postalCode: '',
+      email: '',
+      textArea: ''
+    });
+
+    this.contactForm().reset();
+  }
 
 }
