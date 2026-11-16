@@ -12,12 +12,12 @@ export class ContactFormService {
         const normalizedPayload: ContactFormPayload = {
             firstName: formData.firstName.trim(),
             lastName: formData.lastName.trim(),
-            city: formData.lastName.trim(),
+            city: formData.city.trim(),
             postalCode: removeWhiteSpace(formData.postalCode),
             email: formData.email.trim(),
             textArea: formData.textArea.trim()
         };
-        
+
         return firstValueFrom(this.apiServive.submitContactForm(normalizedPayload));
     }
 }
