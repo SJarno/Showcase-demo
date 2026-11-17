@@ -9,7 +9,8 @@ import { LanguageService } from '../features/language-service/language-service';
 export class TranslatePipe implements PipeTransform {
   private readonly localization = inject(LanguageService);
 
-  transform(key: string): string {
+  transform(key: string | undefined): string {
+    if (!key) return '';
     return this.localization.translate(key);
   }
 }

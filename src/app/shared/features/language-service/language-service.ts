@@ -22,7 +22,10 @@ export class LanguageService {
     }
 
     public async setLanguage(language: Language): Promise<void> {
+
         this.isLoading.set(true);
+        /* await this.loadLanguage(language);
+        this._activeLanguage.set(language); */
         try {
             await this.loadLanguage(language);
             this._activeLanguage.set(language);

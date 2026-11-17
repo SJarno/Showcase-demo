@@ -1,7 +1,7 @@
 <mat-card class="page-container mat-shadow-2">
     <mat-card-header>
         <mat-card-title>
-            <h1>{{ 'app.title' | translate }}</h1>
+            {{ 'app.title' | translate }}
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -14,7 +14,7 @@
                         autocomplete="given-name">
                     @for (error of contactForm.firstName().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                        {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
@@ -24,7 +24,7 @@
                         autocomplete="family-name">
                     @for (error of contactForm.lastName().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                         {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
@@ -33,7 +33,7 @@
                     <input matInput type="text" id="city" [formField]="contactForm.city" autocomplete="address-level2">
                     @for (error of contactForm.city().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                         {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
@@ -43,7 +43,7 @@
                         autocomplete="postal-code" inputmode="numeric" spellcheck="false">
                     @for (error of contactForm.postalCode().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                         {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
@@ -53,7 +53,7 @@
                         placeholder="joku@example.com" autocomplete="email">
                     @for (error of contactForm.email().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                        {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
@@ -64,7 +64,7 @@
                         }}</mat-hint>
                     @for (error of contactForm.textArea().errors(); track error) {
                     <mat-error>
-                        {{ error.message}}
+                         {{ error.message | translate }}
                     </mat-error>
                     }
                 </mat-form-field>
