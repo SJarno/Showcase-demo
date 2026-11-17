@@ -13,6 +13,11 @@ import { MatCardModule } from '@angular/material/card';
 import { ASCII_REGEX, SNACKBAR_SUCCESS } from '../../models/constants';
 import { requiredTrimmed } from '../../../../shared/custom-validators/validators';
 
+
+/**
+ * Provides the contact form interface, including field validation,
+ * submission handling, and form reset functionality.
+ */
 @Component({
   imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule, MatCardModule],
   selector: 'app-contact-form',
@@ -22,12 +27,15 @@ import { requiredTrimmed } from '../../../../shared/custom-validators/validators
 export class ContactFormComponent {
   private readonly _contactFormService = inject(ContactFormService);
   private readonly _errorDialogService = inject(ErrorDialogService);
-  private _snackBar = inject(MatSnackBar);
+  private readonly _snackBar = inject(MatSnackBar);
 
   public title = signal('Please fill in the form');
-  //public isLoading = signal(false);
   public isSubmitting = signal(false);
 
+  /**
+   * Initial state of the contact form.
+   * Used when initializing and clearing the form.
+   */
   private readonly _contactFormModel = signal<ContactFormData>({
     firstName: '',
     lastName: '',
@@ -39,6 +47,12 @@ export class ContactFormComponent {
 
   public readonly textAreaMaxLength = signal(2000);
 
+  /**
+   * Configures the contact form fields and their validation rules.
+   *
+   * Validation is grouped by responsibility to keep the configuration
+   * easy to read and maintain.
+   */
   public contactForm = form(this._contactFormModel, (path) => {
 
     // Required fields
@@ -80,7 +94,7 @@ export class ContactFormComponent {
     });
 
 
-    // Submission state
+    // Prevent editing and re-submitting while the form is being submitted
     const fields = [
       path.firstName,
       path.lastName,
@@ -98,6 +112,12 @@ export class ContactFormComponent {
 
   });
 
+  /**
+   * Validates and submits the contact form.
+   *
+   * Displays a success notification when submission succeeds
+   * and delegates unexpected errors to the error dialog service.
+   */
   public async submitForm(): Promise<void> {
     if (this.contactForm().invalid()) return;
 
@@ -106,8 +126,9 @@ export class ContactFormComponent {
     try {
       await submit(this.contactForm, async (field) => {
         const rawData: ContactFormData = field().value();
-        await this._contactFormService.handlePayload(rawData);
-        field().reset();
+        const response = await this._contactFormService.handlePayload(rawData);
+        console.info(response);
+        this.clearForm(); //reset only on success /no-error
       });
 
       this._snackBar.open(SNACKBAR_SUCCESS, 'Close', {
@@ -117,12 +138,18 @@ export class ContactFormComponent {
 
     } catch (error) {
       console.error(error);
-      this._errorDialogService.handleNonHttpError(error);
+      this._errorDialogService.handleNonHttpError(error); //http errors are handled globally
     } finally {
       this.isSubmitting.set(false);
     }
   }
 
+  /**
+   * Determines whether the submit button should be disabled.
+   *
+   * Submission is prevented when the form is invalid
+   * or a submission is already in progress.
+   */
   public submitDisabled = computed(() => {
     const invalid = this.contactForm().invalid();
     const submitting = this.isSubmitting();

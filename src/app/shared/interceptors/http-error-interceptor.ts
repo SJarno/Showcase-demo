@@ -4,6 +4,12 @@ import { ErrorDialogService } from '../features/error-dialog/services/error-dial
 import { catchError, throwError } from 'rxjs';
 import { shouldShowGlobalErrorDialog } from './helpers';
 
+/**
+ * Intercepts HTTP errors and provides consistent application-wide error handling.
+ *
+ * Displays a global error dialog for selected HTTP status codes while
+ * preserving the original error for further handling by the caller.
+ */
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const errorDialogService = inject(ErrorDialogService);
 
@@ -31,7 +37,8 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status >= 500) {
         message = 'A server error occurred. Please try again later.';
       }
-      //to prevent intrusive dialog pop ups
+      
+      // Avoid displaying global dialogs for errors handled elsewhere.
       if (shouldShowGlobalErrorDialog(error.status)) {
         errorDialogService.openErrorDialog(message);
       }

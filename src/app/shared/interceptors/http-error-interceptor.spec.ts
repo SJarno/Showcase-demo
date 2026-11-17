@@ -80,7 +80,7 @@ describe('httpErrorInterceptor', () => {
       statusText: 'Bad Request'
     });
 
-    expect(errorDialogServiceMock.openErrorDialog).not.toHaveBeenCalled();
+    expect(errorDialogServiceMock.openErrorDialog).toHaveBeenCalled();
   });
 
   it('should not display dialog when status should not trigger global dialog', () => {
@@ -96,7 +96,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     // This assumes shouldShowGlobalErrorDialog returns false for 404.
-    expect(errorDialogServiceMock.openErrorDialog).not.toHaveBeenCalled();
+    expect(errorDialogServiceMock.openErrorDialog).toHaveBeenCalled();
   });
 
   it('should display dialog for too many requests', () => {

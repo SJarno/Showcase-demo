@@ -8,12 +8,12 @@ describe('ContactFormService', () => {
   let service: ContactFormService;
 
   let apiServiceMock: {
-    submitContactForm: ReturnType<typeof vi.fn>;
+    submitContactFormText: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     apiServiceMock = {
-      submitContactForm: vi.fn().mockReturnValue(of({ success: true }))
+      submitContactFormText: vi.fn().mockReturnValue(of({ success: true }))
     };
 
     TestBed.configureTestingModule({
@@ -51,7 +51,7 @@ describe('ContactFormService', () => {
 
     await service.handlePayload(formData);
 
-    expect(apiServiceMock.submitContactForm).toHaveBeenCalledWith(
+    expect(apiServiceMock.submitContactFormText).toHaveBeenCalledWith(
       expectedPayload
     );
   });
@@ -59,7 +59,7 @@ describe('ContactFormService', () => {
   it('should return the API response', async () => {
     const response = { success: true };
 
-    apiServiceMock.submitContactForm.mockReturnValue(of(response));
+    apiServiceMock.submitContactFormText.mockReturnValue(of(response));
 
     const formData: ContactFormData = {
       firstName: 'Pupu',

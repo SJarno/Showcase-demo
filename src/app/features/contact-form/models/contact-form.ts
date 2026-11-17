@@ -16,3 +16,9 @@ export interface ContactFormPayload {
     email: string;
     textArea?: string;
 }
+
+/** For json response*/ 
+export interface ContactFormResponse {
+  message: string;
+  success: boolean;
+}

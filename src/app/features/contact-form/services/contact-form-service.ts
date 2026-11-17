@@ -4,10 +4,27 @@ import { ContactFormApiService } from './contact-form-api-service';
 import { firstValueFrom } from 'rxjs';
 import { removeWhiteSpace } from '../../../shared/utils/helpers';
 
+/**
+ * Busnisess service. Handles contact form data preparation and submission.
+ *
+ * Normalizes user input before delegating the payload
+ * to the contact form API service.
+ */
 @Service()
 export class ContactFormService {
-    private readonly apiServive = inject(ContactFormApiService);
+    private readonly _apiService = inject(ContactFormApiService);
 
+    /**
+   * Normalizes contact form data and submits it to the API.
+   *
+   * Trims surrounding whitespace from text fields and removes
+   * all whitespace from the postal code.
+   * 
+   * As the api is not known to us currently we are asuming unknown.
+   *
+   * @param formData Raw contact form data.
+   * @returns Promise that resolves when the API request completes.
+   */
     public handlePayload(formData: ContactFormData): Promise<unknown> {
         const normalizedPayload: ContactFormPayload = {
             firstName: formData.firstName.trim(),
@@ -18,7 +35,7 @@ export class ContactFormService {
             textArea: formData.textArea.trim()
         };
 
-        return firstValueFrom(this.apiServive.submitContactForm(normalizedPayload));
+        return firstValueFrom(this._apiService.submitContactFormText(normalizedPayload));
     }
 }
 

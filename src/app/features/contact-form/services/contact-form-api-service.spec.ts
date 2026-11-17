@@ -7,7 +7,7 @@ import {
 
 import { ContactFormApiService } from './contact-form-api-service';
 import { ContactFormPayload } from '../models/contact-form';
-import { CONTACT_FORM_API } from '../components/contact-form/api-constants';
+import { CONTACT_FORM_API } from '../api-constants';
 
 describe('ContactFormApiService', () => {
   let service: ContactFormApiService;
@@ -44,7 +44,7 @@ describe('ContactFormApiService', () => {
       textArea: 'Hello!'
     };
 
-    service.submitContactForm(payload).subscribe();
+    service.submitContactFormText(payload).subscribe();
 
     const request = httpTestingController.expectOne(CONTACT_FORM_API);
 
@@ -67,7 +67,7 @@ describe('ContactFormApiService', () => {
 
     let response: string | undefined;
 
-    service.submitContactForm(payload).subscribe(result => {
+    service.submitContactFormText(payload).subscribe(result => {
       response = result;
     });
 
@@ -90,7 +90,7 @@ describe('ContactFormApiService', () => {
 
     let receivedError: unknown;
 
-    service.submitContactForm(payload).subscribe({
+    service.submitContactFormText(payload).subscribe({
       error: error => receivedError = error
     });
 

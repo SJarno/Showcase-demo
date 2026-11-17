@@ -4,10 +4,18 @@ import { ErrorDialogComponent } from '../error-dialog-component';
 import { ErrorDialogData } from '../models';
 import { HttpErrorResponse } from '@angular/common/http';
 
+/**
+    * Handles displaying error dialogs and handling unexpected application errors.
+ */
 @Service()
 export class ErrorDialogService {
     private readonly _dialog = inject(MatDialog);
 
+    /**
+        * Opens an error dialog displaying the provided message.
+        *
+        * @param message Error message to display.
+    */
     public openErrorDialog(message: string): void {
         this._dialog.open<ErrorDialogComponent, ErrorDialogData>(
             ErrorDialogComponent,
@@ -18,6 +26,14 @@ export class ErrorDialogService {
         );
     }
 
+    /**
+        * Handles unexpected non-HTTP errors.
+        *
+        * HTTP errors are ignored because they should be handled separately
+        * by the relevant HTTP error handling mechanism.
+        *
+        * @param error Error to inspect and handle.
+   */
     public handleNonHttpError(error: unknown): void {
         if (error instanceof HttpErrorResponse) {
             return;
