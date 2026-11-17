@@ -1,15 +1,15 @@
 <mat-card class="page-container mat-shadow-2">
     <mat-card-header>
         <mat-card-title>
-            {{ title() }}
+            <h1>{{ 'app.title' | translate }}</h1>
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <form [attr.aria-busy]="isSubmitting()">
             <fieldset>
-                <legend>Contact information. Fields marked with * are required.</legend>
+                <legend>{{ 'contact.information' | translate }}</legend>
                 <mat-form-field>
-                    <mat-label>First name</mat-label>
+                    <mat-label>{{ 'contact.firstName' | translate }}</mat-label>
                     <input matInput type="text" id="firstName" [formField]="contactForm.firstName"
                         autocomplete="given-name">
                     @for (error of contactForm.firstName().errors(); track error) {
@@ -19,7 +19,7 @@
                     }
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Last name</mat-label>
+                    <mat-label>{{ 'contact.lastName' | translate }}</mat-label>
                     <input matInput type="text" id="lastName" [formField]="contactForm.lastName"
                         autocomplete="family-name">
                     @for (error of contactForm.lastName().errors(); track error) {
@@ -29,7 +29,7 @@
                     }
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>City</mat-label>
+                    <mat-label>{{ 'contact.city' | translate }}</mat-label>
                     <input matInput type="text" id="city" [formField]="contactForm.city" autocomplete="address-level2">
                     @for (error of contactForm.city().errors(); track error) {
                     <mat-error>
@@ -38,7 +38,7 @@
                     }
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Postal code</mat-label>
+                    <mat-label>{{ 'contact.postalCode' | translate }}</mat-label>
                     <input matInput type="text" id="postalCode" [formField]="contactForm.postalCode"
                         autocomplete="postal-code" inputmode="numeric" spellcheck="false">
                     @for (error of contactForm.postalCode().errors(); track error) {
@@ -48,7 +48,7 @@
                     }
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Email</mat-label>
+                    <mat-label>{{ 'contact.email' | translate }}</mat-label>
                     <input matInput type="email" id="email" [formField]="contactForm.email"
                         placeholder="joku@example.com" autocomplete="email">
                     @for (error of contactForm.email().errors(); track error) {
@@ -58,7 +58,7 @@
                     }
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Additional information</mat-label>
+                    <mat-label>{{ 'contact.additionalInformation' | translate }}</mat-label>
                     <textarea matInput id="textArea" [formField]="contactForm.textArea"></textarea>
                     <mat-hint align="end">{{contactForm.textArea().value().length }}/{{ textAreaMaxLength()
                         }}</mat-hint>
@@ -73,12 +73,12 @@
     </mat-card-content>
     <div class="progress-bar">
         @if (isSubmitting()) {
-        <mat-progress-bar mode="indeterminate" aria-label="Submitting contact information"></mat-progress-bar>
+        <mat-progress-bar mode="indeterminate" [attr.aria-label]="'contact.submitting' | translate"></mat-progress-bar>
         }
     </div>
     <mat-divider></mat-divider>
     <mat-card-actions class="footer-actions">
-        <button matButton="filled" (click)="submitForm()" [disabled]="submitDisabled()">Submit</button>
-        <button matButton="outlined" (click)="clearForm()" [disabled]="isSubmitting()">Clear</button>
+        <button matButton="filled" (click)="submitForm()" [disabled]="submitDisabled()"> {{ 'common.submit' | translate }}</button>
+        <button matButton="outlined" (click)="clearForm()" [disabled]="isSubmitting()">{{ 'common.clear' | translate }}</button>
     </mat-card-actions>
 </mat-card>

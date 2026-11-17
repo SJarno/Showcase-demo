@@ -8,9 +8,10 @@ import {
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorDialogData } from './models';
+import { TranslatePipe } from '../../pipes/translate-pipe';
 
 @Component({
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions,MatDialogModule, MatButtonModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions,MatDialogModule, MatButtonModule, TranslatePipe],
   selector: 'app-error-dialog-component',
   styleUrl: './error-dialog-component.scss',
   templateUrl: './error-dialog-component.html',

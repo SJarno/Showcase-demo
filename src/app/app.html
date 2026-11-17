@@ -1,5 +1,33 @@
 <header class="main-header">
   <h1>{{ title() }}</h1>
+  <button mat-icon-button [matMenuTriggerFor]="languageMenu" aria-label="Select language">
+    <mat-icon fontSet="material-symbols-outlined">
+      language
+    </mat-icon>
+  </button>
+
+  <mat-menu #languageMenu="matMenu">
+    <button mat-menu-item (click)="changeLanguage('fi')">
+      <mat-icon>
+        {{ localization.language() === 'fi' ? 'check' : '' }}
+      </mat-icon>
+      {{ 'language.finnish' | translate }}
+    </button>
+
+    <button mat-menu-item (click)="changeLanguage('sv')">
+      <mat-icon>
+        {{ localization.language() === 'sv' ? 'check' : '' }}
+      </mat-icon>
+      {{ 'language.swedish' | translate }}
+    </button>
+
+    <button mat-menu-item (click)="changeLanguage('en')">
+      <mat-icon>
+        {{ localization.language() === 'en' ? 'check' : '' }}
+      </mat-icon>
+      {{ 'language.english' | translate }}
+    </button>
+  </mat-menu>
 </header>
 
 <main class="main-content">

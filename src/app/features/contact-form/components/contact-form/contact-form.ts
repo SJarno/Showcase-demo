@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ContactFormData } from '../../models/contact-form';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -10,8 +10,10 @@ import { ErrorDialogService } from '../../../../shared/features/error-dialog/ser
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { ASCII_REGEX, SNACKBAR_SUCCESS } from '../../models/constants';
+import { ASCII_REGEX } from '../../models/constants';
 import { requiredTrimmed } from '../../../../shared/custom-validators/validators';
+import { TranslatePipe } from '../../../../shared/pipes/translate-pipe';
+import { LanguageService } from '../../../../shared/features/language-service/language-service';
 
 
 /**
@@ -19,7 +21,7 @@ import { requiredTrimmed } from '../../../../shared/custom-validators/validators
  * submission handling, and form reset functionality.
  */
 @Component({
-  imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule, MatCardModule],
+  imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule, MatCardModule, TranslatePipe],
   selector: 'app-contact-form',
   styleUrl: './contact-form.scss',
   templateUrl: './contact-form.html',
@@ -28,8 +30,8 @@ export class ContactFormComponent {
   private readonly _contactFormService = inject(ContactFormService);
   private readonly _errorDialogService = inject(ErrorDialogService);
   private readonly _snackBar = inject(MatSnackBar);
+  private readonly _langService = inject(LanguageService);
 
-  public title = signal('Please fill in the form');
   public isSubmitting = signal(false);
 
   /**
@@ -56,41 +58,41 @@ export class ContactFormComponent {
   public contactForm = form(this._contactFormModel, (path) => {
 
     // Required fields
-    requiredTrimmed(path.firstName, 'First name required');
-    requiredTrimmed(path.lastName, 'Last name required');
-    requiredTrimmed(path.city, 'City is required');
+    requiredTrimmed(path.firstName, this._langService.translate('validation.firstNameRequired'));
+    requiredTrimmed(path.lastName, this._langService.translate('validation.lastNameRequired'));
+    requiredTrimmed(path.city, this._langService.translate('validation.cityRequired'));
 
     required(path.postalCode, {
-      message: 'Postal code is required'
+      message: this._langService.translate('validation.postalCodeRequired')
     });
     required(path.email, {
-      message: 'Email is required'
+      message: this._langService.translate('validation.emailRequired')
     });
 
     // Pattern validation
     pattern(path.firstName, ASCII_REGEX, {
-      message: 'First name contains invalid characters'
+      message: this._langService.translate('validation.firstNamePattern')
     });
 
     pattern(path.lastName, ASCII_REGEX, {
-      message: 'Last name contains invalid characters'
+      message: this._langService.translate('validation.lastNamePattern')
     });
 
     pattern(path.city, ASCII_REGEX, {
-      message: 'City contains invalid characters'
+      message: this._langService.translate('validation.cityPattern')
     });
 
     pattern(path.postalCode, /^\d{5}$/, {
-      message: 'Postal code must contain exactly five digits'
+      message: this._langService.translate('validation.postalCodePattern')
     });
 
     email(path.email, {
-      message: 'Not a valid email'
+      message: this._langService.translate('validation.emailInvalid')
     });
 
     // Length validation
     maxLength(path.textArea, this.textAreaMaxLength(), {
-      message: 'Maximum of 2000 characters allowed'
+      message: this._langService.translate('validation.textAreaMaxLength')
     });
 
 
@@ -131,8 +133,9 @@ export class ContactFormComponent {
         this.clearForm(); //reset only on success /no-error
       });
 
-      this._snackBar.open(SNACKBAR_SUCCESS, 'Close', {
-        verticalPosition: 'top',
+      ;
+      this._snackBar.open(this._langService.translate('notification.contactSuccess'), this._langService.translate('common.close'), {
+        verticalPosition: 'bottom',
         duration: 5000
       });
 
