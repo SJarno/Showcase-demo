@@ -171,6 +171,9 @@ The form submits its data to the external endpoint specified in the original ass
 
 The endpoint is provided by Beeceptor for testing purposes and is not part of this repository.
 
+**NOTE**: The provided back end response is also a text rather than json/rest api. Therefore we are not expecting a json format response. 
+An implementation or a stub for this does exist in the code base.
+
 ## Testing
 
 Automated tests are implemented using Vitest and Angular's testing utilities.
