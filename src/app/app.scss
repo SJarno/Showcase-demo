@@ -1,14 +1,28 @@
 .main-header {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     width: 100%;
-    padding: 24px;
+    padding: 2em;
+    box-sizing: border-box;
+
+    h1 {
+        grid-column: 2;
+        margin: 0;
+        text-align: center;
+    }
+
+    button {
+        grid-column: 3;
+        justify-self: end;
+        color: var(--mat-sys-on-primary);
+    }
 }
 
 .main-content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     padding: 24px;
 }

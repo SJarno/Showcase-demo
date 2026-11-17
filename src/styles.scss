@@ -69,3 +69,7 @@ mat-card {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
 }
+
+* {
+  box-sizing: border-box;
+}
