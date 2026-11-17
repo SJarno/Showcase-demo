@@ -1,56 +1,67 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { Language, TranslationDictionary } from './models';
 
 @Service()
 export class LanguageService {
-    private readonly http = inject(HttpClient);
+    private readonly _http = inject(HttpClient);
 
-  private readonly activeLanguage = signal<Language>('en');
+    private readonly _activeLanguage = signal<Language>('en');
 
-  readonly language = this.activeLanguage.asReadonly();
+    public readonly language = this._activeLanguage.asReadonly();
 
-  private readonly translations = new Map<Language, TranslationDictionary>();
-  private readonly pendingRequests = new Map<Language, Promise<TranslationDictionary>>();
+    private readonly _translations = new Map<Language, TranslationDictionary>();
+    private readonly _pendingRequests = new Map<Language, Promise<TranslationDictionary>>();
 
-  async initialize(): Promise<void> {
-    await this.setLanguage('en');
-  }
+    public readonly isLoading = signal(false);
 
-  async setLanguage(language: Language): Promise<void> {
-    await this.loadLanguage(language);
-    this.activeLanguage.set(language);
-  }
 
-  translate(key: string): string {
-    return this.translations.get(this.activeLanguage())?.[key] ?? key;
-  }
-
-  private async loadLanguage(language: Language): Promise<TranslationDictionary> {
-    const cached = this.translations.get(language);
-
-    if (cached) {
-      return cached;
+    public async initialize(): Promise<void> {
+        await this.setLanguage('en');
     }
 
-    const pending = this.pendingRequests.get(language);
-
-    if (pending) {
-      return pending;
+    public async setLanguage(language: Language): Promise<void> {
+        this.isLoading.set(true);
+        try {
+            await this.loadLanguage(language);
+            this._activeLanguage.set(language);
+        } catch (error) {
+            console.error(`Failed to load language: ${language}`, error);
+            throw error;
+        } finally {
+            this.isLoading.set(false);
+        }
     }
 
-    const request = firstValueFrom(
-      this.http.get<TranslationDictionary>(`i18n/${language}.json`)
-    ).then(translations => {
-      this.translations.set(language, translations);
-      return translations;
-    }).finally(() => {
-      this.pendingRequests.delete(language);
-    });
+    public translate(key: string): string {
+        return this._translations.get(this._activeLanguage())?.[key] ?? key;
+    }
 
-    this.pendingRequests.set(language, request);
+    private async loadLanguage(language: Language): Promise<TranslationDictionary> {
+        const cached = this._translations.get(language);
 
-    return request;
-  }
+        if (cached) {
+            return cached;
+        }
+
+        const pending = this._pendingRequests.get(language);
+
+        if (pending) {
+            return pending;
+        }
+
+        const request = firstValueFrom(
+            this._http.get<TranslationDictionary>(`i18n/${language}.json`)
+        ).then(translations => {
+            this._translations.set(language, translations);
+            return translations;
+        }).finally(() => {
+            this._pendingRequests.delete(language);
+        });
+
+        this._pendingRequests.set(language, request);
+
+        return request;
+    }
 }

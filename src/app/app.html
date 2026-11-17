@@ -28,6 +28,9 @@
       {{ 'language.english' | translate }}
     </button>
   </mat-menu>
+  @if (localization.isLoading()) {
+  <mat-progress-bar mode="indeterminate" class="progress-bar"></mat-progress-bar>
+  }
 </header>
 
 <main class="main-content">

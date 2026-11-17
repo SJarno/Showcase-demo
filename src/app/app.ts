@@ -7,9 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { Language } from './shared/features/language-service/models';
 import { LanguageService } from './shared/features/language-service/language-service';
 import { TranslatePipe } from './shared/pipes/translate-pipe';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
-  imports: [RouterOutlet, ContactFormComponent, MatButtonModule, MatMenuModule, MatIconModule, TranslatePipe],
+  imports: [RouterOutlet, ContactFormComponent, MatButtonModule, MatMenuModule, MatIconModule, TranslatePipe, MatProgressBarModule],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
