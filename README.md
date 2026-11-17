@@ -99,6 +99,11 @@ In addition to the form itself, the implementation includes internationalization
 
 ## Getting Started
 
+### Testing the application
+
+- You can also test the application here: https://sjarno.github.io/Showcase-demo/
+- Proceed on the following steps if you would like to test this with a local build
+
 ### Prerequisites
 
 - Node.js version compatible with Angular 22.
