@@ -7,7 +7,6 @@
 .page-container {
     display: flex;
     flex-direction: column;
-    gap: 1em;
     width: 100%;
 }
 
@@ -29,6 +28,7 @@ mat-form-field {
     display: flex;
     justify-content: center;
     gap: 1em;
+    padding: 1em 0 1em 0;
 }
 
 /* disable defaults */
@@ -37,4 +37,8 @@ fieldset {
     padding: 0;
     margin: 0;
     min-width: 0;
+}
+
+legend {
+    padding: 1em 0 1em 0;
 }

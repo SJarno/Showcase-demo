@@ -13,6 +13,7 @@ html {
       typography: Roboto,
       density: 0,
     ));
+  @include mat.system-classes();
 }
 
 body {
@@ -24,9 +25,15 @@ body {
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
+  //original:
+  /* background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium); */
+  //custom:
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   font: var(--mat-sys-body-medium);
+  
 
   // Reset the user agent margin.
   margin: 0;
@@ -56,4 +63,9 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: inherit !important;
   caret-color: inherit;
   transition: background-color 5000s ease-in-out 0s;
+}
+//overrides
+mat-card {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 }
