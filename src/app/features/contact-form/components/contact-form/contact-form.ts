@@ -40,18 +40,20 @@ export class ContactFormComponent {
   public readonly textAreaMaxLength = signal(2000);
 
   public contactForm = form(this._contactFormModel, (path) => {
-    /* required(path.firstName, {
-      message: 'First name required'
-    }); */
 
+    // Required fields
     requiredTrimmed(path.firstName, 'First name required');
-
-    /* required(path.lastName, {
-      message: 'Last name required'
-    }); */
-
     requiredTrimmed(path.lastName, 'Last name required');
+    requiredTrimmed(path.city, 'City is required');
 
+    required(path.postalCode, {
+      message: 'Postal code is required'
+    });
+    required(path.email, {
+      message: 'Email is required'
+    });
+
+    // Pattern validation
     pattern(path.firstName, ASCII_REGEX, {
       message: 'First name contains invalid characters'
     });
@@ -60,54 +62,38 @@ export class ContactFormComponent {
       message: 'Last name contains invalid characters'
     });
 
-    /* required(path.city, {
-      message: 'City is required'
-    }); */
-
     pattern(path.city, ASCII_REGEX, {
       message: 'City contains invalid characters'
     });
 
-    requiredTrimmed(path.city, 'City is required');
-
-    required(path.postalCode, {
-      message: 'Postal code is required'
-    });
     pattern(path.postalCode, /^\d{5}$/, {
       message: 'Postal code must contain exactly five digits'
     });
 
-    required(path.email, {
-      message: 'Email is required'
+    email(path.email, {
+      message: 'Not a valid email'
     });
-    email(path.email, { message: 'Not a valid email' });
 
+    // Length validation
     maxLength(path.textArea, this.textAreaMaxLength(), {
-      message: 'Maximun of 2000 characters allowed'
+      message: 'Maximum of 2000 characters allowed'
     });
 
-    disabled(path.firstName, {
-      when: () => this.isSubmitting()
-    });
 
-    disabled(path.lastName, {
-      when: () => this.isSubmitting()
-    });
+    // Submission state
+    const fields = [
+      path.firstName,
+      path.lastName,
+      path.city,
+      path.postalCode,
+      path.email,
+      path.textArea
+    ];
 
-    disabled(path.city, {
-      when: () => this.isSubmitting()
-    });
-
-    disabled(path.postalCode, {
-      when: () => this.isSubmitting()
-    });
-
-    disabled(path.email, {
-      when: () => this.isSubmitting()
-    });
-
-    disabled(path.textArea, {
-      when: () => this.isSubmitting()
+    fields.forEach((field) => {
+      disabled(field, {
+        when: () => this.isSubmitting()
+      });
     });
 
   });
