@@ -86,14 +86,15 @@ describe('ContactFormComponent', () => {
     expect(component.contactForm.textArea().value()).toBe('');
   });
 
-  it('required fields are correct', () => {
-    expect(component.contactForm.firstName().required()).toBe(true);
-    expect(component.contactForm.lastName().required()).toBe(true);
-    expect(component.contactForm.city().required()).toBe(true);
-    expect(component.contactForm.postalCode().required()).toBe(true);
-    expect(component.contactForm.textArea().required()).toBe(false);
-  });
+  it('should require the correct fields', () => {
+    expect(component.contactForm.firstName().invalid()).toBe(true);
+    expect(component.contactForm.lastName().invalid()).toBe(true);
+    expect(component.contactForm.city().invalid()).toBe(true);
+    expect(component.contactForm.postalCode().invalid()).toBe(true);
+    expect(component.contactForm.email().invalid()).toBe(true);
 
+    expect(component.contactForm.textArea().valid()).toBe(true);
+  });
 
 
   it('form invalid in start', () => {
@@ -135,7 +136,122 @@ describe('ContactFormComponent', () => {
     expect(component.contactForm.textArea().disabled()).toBe(true);
   });
 
+  it.each(['', ' ', '   ', '\t', '\n'])(
+    'should reject empty or whitespace-only required fields',
+    (value) => {
+      component.contactForm.firstName().value.set(value);
+      component.contactForm.lastName().value.set(value);
+      component.contactForm.city().value.set(value);
+      component.contactForm.postalCode().value.set(value);
+      component.contactForm.email().value.set(value);
 
+      expect(component.contactForm.firstName().invalid()).toBe(true);
+      expect(component.contactForm.lastName().invalid()).toBe(true);
+      expect(component.contactForm.city().invalid()).toBe(true);
+      expect(component.contactForm.postalCode().invalid()).toBe(true);
+      expect(component.contactForm.email().invalid()).toBe(true);
+
+      expect(component.contactForm().invalid()).toBe(true);
+      expect(component.submitDisabled()).toBe(true);
+    }
+  );
+
+  it('should accept valid Finnish postal codes', () => {
+    component.contactForm.postalCode().value.set('00100');
+    expect(component.contactForm.postalCode().valid()).toBe(true);
+  });
+
+  it.each([
+    '1234',
+    '123456',
+    'ABCDE',
+    '12 34',
+    '1234A'
+  ])('should reject invalid postal code: %s', (postalCode) => {
+    component.contactForm.postalCode().value.set(postalCode);
+
+    expect(component.contactForm.postalCode().invalid()).toBe(true);
+  });
+
+  describe('first name validation', () => {
+    it.each([
+      'Pupu',
+      'Mäkelä',
+      'Åström',
+      'Jean-Luc',
+      "O'Connor",
+      'Mary Jane',
+      'St. John'
+    ])('should accept valid name: %s', (name) => {
+      component.contactForm.firstName().value.set(name);
+
+      expect(component.contactForm.firstName().valid()).toBe(true);
+    });
+
+    it.each([
+      'John123',
+      'Pupu!',
+      'Name#',
+      'Test$'
+    ])('should reject invalid name: %s', (name) => {
+      component.contactForm.firstName().value.set(name);
+
+      expect(component.contactForm.firstName().invalid()).toBe(true);
+    });
+  });
+
+  describe('last name validation', () => {
+    it.each([
+      'Ankka',
+      'Mäkelä',
+      'Åström',
+      'Jean-Luc',
+      "O'Connor",
+      'Van Der Berg'
+    ])('should accept valid name: %s', (name) => {
+      component.contactForm.lastName().value.set(name);
+
+      expect(component.contactForm.lastName().valid()).toBe(true);
+    });
+
+    it.each([
+      'Ankka123',
+      'Name!',
+      'Test#',
+      'Last$'
+    ])('should reject invalid name: %s', (name) => {
+      component.contactForm.lastName().value.set(name);
+
+      expect(component.contactForm.lastName().invalid()).toBe(true);
+    });
+  });
+
+  describe('city validation', () => {
+    it.each([
+      'Helsinki',
+      'Mäntsälä',
+      'Äänekoski',
+      'Åbo',
+      'New York',
+      'St. Louis',
+      "L'Aquila"
+    ])('should accept valid city: %s', (city) => {
+      component.contactForm.city().value.set(city);
+
+      expect(component.contactForm.city().valid()).toBe(true);
+    });
+
+    it.each([
+      'Helsinki123',
+      'London!',
+      'New York#',
+      'City$'
+    ])('should reject invalid city: %s', (city) => {
+      component.contactForm.city().value.set(city);
+
+      expect(component.contactForm.city().invalid()).toBe(true);
+    });
+  });
 
 
   it('should set isSubmitting to true during submission', async () => {

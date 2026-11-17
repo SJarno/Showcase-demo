@@ -5,12 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { ContactFormService } from '../../services/contact-form-service';
-import { form, required, FormField, disabled, submit, maxLength, email } from '@angular/forms/signals';
+import { form, required, FormField, disabled, submit, maxLength, email, pattern } from '@angular/forms/signals';
 import { ErrorDialogService } from '../../../../shared/features/error-dialog/services/error-dialog-service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {MatCardModule} from '@angular/material/card';
-import { SNACKBAR_SUCCESS } from '../../models/constants';
+import { MatCardModule } from '@angular/material/card';
+import { ASCII_REGEX, SNACKBAR_SUCCESS } from '../../models/constants';
+import { requiredTrimmed } from '../../../../shared/custom-validators/validators';
 
 @Component({
   imports: [MatInputModule, MatFormFieldModule, MatDividerModule, MatButtonModule, FormField, MatProgressBarModule, MatCardModule],
@@ -39,20 +40,41 @@ export class ContactFormComponent {
   public readonly textAreaMaxLength = signal(2000);
 
   public contactForm = form(this._contactFormModel, (path) => {
-    required(path.firstName, {
+    /* required(path.firstName, {
       message: 'First name required'
-    });
+    }); */
 
-    required(path.lastName, {
+    requiredTrimmed(path.firstName, 'First name required');
+
+    /* required(path.lastName, {
       message: 'Last name required'
+    }); */
+
+    requiredTrimmed(path.lastName, 'Last name required');
+
+    pattern(path.firstName, ASCII_REGEX, {
+      message: 'First name contains invalid characters'
     });
 
-    required(path.city, {
-      message: 'City is required'
+    pattern(path.lastName, ASCII_REGEX, {
+      message: 'Last name contains invalid characters'
     });
+
+    /* required(path.city, {
+      message: 'City is required'
+    }); */
+
+    pattern(path.city, ASCII_REGEX, {
+      message: 'City contains invalid characters'
+    });
+
+    requiredTrimmed(path.city, 'City is required');
 
     required(path.postalCode, {
       message: 'Postal code is required'
+    });
+    pattern(path.postalCode, /^\d{5}$/, {
+      message: 'Postal code must contain exactly five digits'
     });
 
     required(path.email, {
