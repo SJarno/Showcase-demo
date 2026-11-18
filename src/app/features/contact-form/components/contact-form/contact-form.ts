@@ -58,9 +58,15 @@ export class ContactFormComponent {
   public contactForm = form(this._contactFormModel, (path) => {
 
     // Required field
-    required(path.firstName);
-    required(path.lastName);
-    required(path.city);
+    required(path.firstName, {
+      message: 'validation.firstNameRequired'
+    });
+    required(path.lastName, {
+      message: 'validation.lastNameRequired'
+    });
+    required(path.city, {
+      message: 'validation.cityRequired'
+    });
     requiredTrimmed(path.firstName, 'validation.firstNameRequired');
     requiredTrimmed(path.lastName, 'validation.lastNameRequired');
     requiredTrimmed(path.city, 'validation.cityRequired');
