@@ -20,19 +20,15 @@
                     <mat-label>{{ 'contact.lastName' | translate }}</mat-label>
                     <input matInput type="text" id="lastName" [formField]="contactForm.lastName"
                         autocomplete="family-name">
-                    @for (error of contactForm.lastName().errors(); track error) {
-                    <mat-error>
-                         {{ error.message | translate }}
-                    </mat-error>
+                    @if (contactForm.lastName().errors()[0]; as error) {
+                        <mat-error>{{ error.message | translate }}</mat-error>
                     }
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'contact.city' | translate }}</mat-label>
                     <input matInput type="text" id="city" [formField]="contactForm.city" autocomplete="address-level2">
-                    @for (error of contactForm.city().errors(); track error) {
-                    <mat-error>
-                         {{ error.message | translate }}
-                    </mat-error>
+                    @if (contactForm.city().errors()[0]; as error) {
+                        <mat-error>{{ error.message | translate }}</mat-error>
                     }
                 </mat-form-field>
                 <mat-form-field>
