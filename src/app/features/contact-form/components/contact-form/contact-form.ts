@@ -57,42 +57,51 @@ export class ContactFormComponent {
    */
   public contactForm = form(this._contactFormModel, (path) => {
 
-    // Required fields
-    requiredTrimmed(path.firstName, this._langService.translate('validation.firstNameRequired'));
-    requiredTrimmed(path.lastName, this._langService.translate('validation.lastNameRequired'));
-    requiredTrimmed(path.city, this._langService.translate('validation.cityRequired'));
+    // Required field
+    required(path.firstName, {
+      message: 'validation.firstNameRequired'
+    });
+    required(path.lastName, {
+      message: 'validation.lastNameRequired'
+    });
+    required(path.city, {
+      message: 'validation.cityRequired'
+    });
+    requiredTrimmed(path.firstName, 'validation.firstNameRequired');
+    requiredTrimmed(path.lastName, 'validation.lastNameRequired');
+    requiredTrimmed(path.city, 'validation.cityRequired');
 
     required(path.postalCode, {
-      message: this._langService.translate('validation.postalCodeRequired')
+      message: 'validation.postalCodeRequired'
     });
     required(path.email, {
-      message: this._langService.translate('validation.emailRequired')
+      message:'validation.emailRequired'
     });
 
     // Pattern validation
     pattern(path.firstName, ASCII_REGEX, {
-      message: this._langService.translate('validation.firstNamePattern')
+      message: 'validation.firstNamePattern'
     });
 
     pattern(path.lastName, ASCII_REGEX, {
-      message: this._langService.translate('validation.lastNamePattern')
+      message: 'validation.lastNamePattern'
     });
 
     pattern(path.city, ASCII_REGEX, {
-      message: this._langService.translate('validation.cityPattern')
+      message: 'validation.cityPattern'
     });
 
     pattern(path.postalCode, /^\d{5}$/, {
-      message: this._langService.translate('validation.postalCodePattern')
+      message: 'validation.postalCodePattern'
     });
 
     email(path.email, {
-      message: this._langService.translate('validation.emailInvalid')
+      message: 'validation.emailInvalid'
     });
 
     // Length validation
     maxLength(path.textArea, this.textAreaMaxLength(), {
-      message: this._langService.translate('validation.textAreaMaxLength')
+      message: 'validation.textAreaMaxLength'
     });
 
 
